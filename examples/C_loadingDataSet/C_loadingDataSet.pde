@@ -38,13 +38,7 @@ void draw() {
     PVector locFuture = new PVector(lon2, lat2);
 
     // text(cities.get(i),  );
-
-
-
-
-
-
-
+    
     if (human.dist(locPresent)< 10) {
 
       text(cities.get(i), lon, lat);

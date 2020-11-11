@@ -2,12 +2,11 @@
 // data literacy and visualization inputs
 // october - november 2020, Berlin
 
-
 // reference to Spherical Coordinate System
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system
 // how to calculate x y z in an spherical coordinate system
 
-import peasy.*;
+import peasy.*; // peasy cam library
 
 PShape earth;
 PImage surftex1;
@@ -32,7 +31,7 @@ int rZ=0;
 PGraphics canvas;
 // examples of manually added points
 
-PVector human  = new PVector();
+PVector human  = new PVector(); // mouse position vector 
 
 // for loading data from future cities database
 Table futureCities;
@@ -40,6 +39,9 @@ ArrayList<String> cities  = new ArrayList<String>(); // names of the cities
 ArrayList<PVector> geoCoords = new ArrayList<PVector>();
 ArrayList<String> futCities = new ArrayList<String>(); // names of the future cities
 ArrayList<PVector> futGeoCoords = new ArrayList<PVector>();
+
+float angle=0;
+
 
 void setup() {
   size(displayWidth, displayHeight, P2D);
@@ -51,10 +53,7 @@ void setup() {
 
   frameRate(60);
 
-
-
   if (!easycamIntialized) {
-
     cam.setMinimumDistance(20);
     cam.setMaximumDistance(r*600);
     easycamIntialized=true;
@@ -64,16 +63,12 @@ void setup() {
   // surftex1 =loadImage("data/earth_sat.jpg"); 
   surftex1 =loadImage("data/earth_min.jpg"); 
 
-
   // loading images containing simplified GeoTIFF data
   co2 = loadImage("data/co2_emissions.png"); 
   co2.resize(width/8, height/8);
   
   reforest= loadImage("data/geodata_ref_potential.png");
   reforest.resize(width/8, height/8);
-
-
-
 
   canvas.sphereDetail(32);
   canvas.noStroke();
@@ -84,9 +79,9 @@ void setup() {
   // turning Data from Image (grayscale) into an ArrayList containing CO2 data in 3D Geo Coordinates
   dataFromTIFFtoArray(co2, pntsFTIFF_co2, 1.0, color(0,0,0));
   dataFromTIFFtoArray(reforest, pntsFTIFF_reforest, 0.25, color(0,255,0));
-  
 }
-float angle=0;
+
+
 void draw() {
   angle =0.0005;
   human.set(mouseX, mouseY);
@@ -95,16 +90,16 @@ void draw() {
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(255);
+  canvas.background(0);// background color
 
   // Disabling writing to the depth mask so the 
   // background image doesn't occludes any 3D object.
   canvas.hint(DISABLE_DEPTH_MASK);
   canvas.hint(ENABLE_DEPTH_MASK);
-  canvas.directionalLight(255, 0, 0, -10, -10, -10);
+  /*canvas.directionalLight(255, 0, 0, -10, -10, -10);
   canvas.directionalLight(100, 255, 50, 0, 0, 10);
   canvas.directionalLight(255, 100, 50, 0, 10, 0);
-  canvas.directionalLight(180, 180, 255, 10, -10, -10);
+  canvas.directionalLight(180, 180, 255, 10, -10, -10);*/
   // this rotation is applied to correct the rotation of the texture according to 
   canvas.push();
   canvas.rotateX(radians( rX));
@@ -167,24 +162,23 @@ void draw() {
   }
 }
 
-
-
-
 PointOfInterest [] pOIs;
 void loadData() {
-
-
+  
   futureCities = loadTable("data/future_cities_data.csv", "header");
   println(futureCities.getRowCount() + " total rows in table");
 
   int entriesCount =0;
   for (TableRow row : futureCities.rows()) {
+    
+    // current city Position definition 
     String city = row.getString("current_city");
     float longitude = row.getFloat("Longitude");
     float latitude = row.getFloat("Latitude");
 
+    // future city Position definition 
+    //but how are these connected to the current cities?
     String futureCity = row.getString("future_city_1_source");
-
     float longFut = row.getFloat("future_long");
     float latFut = row.getFloat("future_lat");
 
@@ -192,7 +186,6 @@ void loadData() {
       // println(city, longitude, latitude );
       cities.add(city);
       geoCoords.add(new PVector(longitude, latitude));
-
       futCities.add(futureCity);
       futGeoCoords.add(new PVector(longFut, latFut));
     }
@@ -202,14 +195,12 @@ void loadData() {
 }
 
 void multiplePOI() {
-
   for (int i=0; i<cities.size(); i++) {
-
     pOIs[i] = new PointOfInterest(geoCoords.get(i).y, geoCoords.get(i).x, cities.get(i), 400, i);
   }
 }
 
-void displayMultiplePOI2D() {
+void displayMultiplePOI2D() { // loading all 2d visible points of interest
   for (int i=0; i<cities.size(); i++) {
     pOIs[i].update(canvas);
     pOIs[i].display2D();
@@ -217,16 +208,15 @@ void displayMultiplePOI2D() {
   }
 }
 
-void displayMultiplePOI3D() {
+void displayMultiplePOI3D() { // showing 3d points of interest
   for (int i=0; i<cities.size(); i++) {
-
     pOIs[i].display3D(canvas);
   }
 }
 
 void debugInfo() {
   textFont(myFont);
-  fill(100);
+  fill(255);
   text("fps : " + frameRate, 20, 20);
   text("> press 'C' for showing CO2 emissions", 20,40);
   text("> press 'G' for showing reforestation potential", 20,60);

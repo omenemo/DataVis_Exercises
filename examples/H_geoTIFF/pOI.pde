@@ -1,9 +1,8 @@
-
 class  PointOfInterest{
 
-  PVector location;
+  PVector location; // PVector for current cities
   float radius;
-  PVector scrnPnt =new PVector();
+  PVector scrnPnt = new PVector(); // pvector for displaying all cities based on PVector «location» 
   String name;
   int i;
   float lat, lon;
@@ -30,10 +29,11 @@ class  PointOfInterest{
   // x = R* cos (latitude in radians) * cos(longitude in radians);
   // y = R * cos(latitude in radians) * sin(longitude in radians);
   // z = R * sin(latitude in radians )
+  
     lat = latitude;
     lon = longitude;
     radius = _r +0.5; // with 10 units away from earth's surface
-    location = new PVector(
+    location = new PVector( // defining the 3d coordinate PVector using Latitude + Longitude from location array
       radius* cos (radians(latitude)) * cos(radians(longitude)),
       radius * cos(radians(latitude)) * sin(radians(longitude)),
       radius * sin(radians(latitude))
@@ -42,57 +42,61 @@ class  PointOfInterest{
     i = _i;
   }
 
-  void update(PGraphics _canvas){
+  void update(PGraphics _canvas){ // function to translate the «3d» coordinates to «Screen» coordinates
     scrnPnt.set(
-      _canvas.screenX(-location.x,location.y,location.z), 
+      _canvas.screenX(-location.x,location.y,location.z),
       _canvas.screenY(-location.x,location.y,location.z),
       _canvas.screenZ(-location.x,location.y,location.z)
     );
   }
+  
   void display3D(PGraphics _canvas){
+    // Big dots settings 
     _canvas.strokeWeight(10);
-    _canvas.stroke(255,0,0);
+    _canvas.stroke(0,0,0); // black
     _canvas.point(-location.x,location.y,location.z);
-    
   }
 
   void display2D(){
-    fill(0,0,255);
+    // Typeface settings
+    fill(255,255,255);
     strokeWeight(0.5);
-    stroke(0,0,255,100);
+    //stroke(255,255,255,100); //Outlining type WTF? #typeretards!!!
     
-
-    stroke(0,0,255);
-    strokeWeight(4);
-    point(scrnPnt.x,scrnPnt.y);
-    
+    // Small dots parameters
+    stroke(0,0,255); //  blue
+    strokeWeight(0); // invisible
+    point(scrnPnt.x,scrnPnt.y); 
   }
+  
   void interact(PVector _human){
-    if(_human.dist(scrnPnt)< 10){
+    if(_human.dist(scrnPnt)< 7){ // collision detection with cities
       strokeWeight(0.5);
-      stroke(0,0,255,100);
+      stroke(0,0,0,100); // Line Color
       float lx = scrnPnt.x;
       float ly = scrnPnt.y;
+      // float ex = scrnPnt.x;
+      // float ey = scrnPnt.y;
       line(lx,0,lx,height);
       line(0,ly,width,ly);
       textFont(myFont);
       text(name, 25,180);
-      text("screen coords : " + scrnPnt.x + " ,  " + scrnPnt.y +  " , " + scrnPnt.z, 25,200);
-      text("3D coords : "  + -location.x + " ,  " + location.y +  " , " + location.z, 25,220);
+      text("screen coords : " + scrnPnt.x + " ,  " + scrnPnt.y +  " , " + scrnPnt.z, 25,200); // screen coordinate display
+      text("3D coords : "  + -location.x + " ,  " + location.y +  " , " + location.z, 25,220); // 3d coordinate display
       textFont(myFontH);
       text(name, width-300,scrnPnt.y+10);
       textFont(myFont);
       text("lat : " + lat + "lon : " + lon, width-300,scrnPnt.y+50);
-      noStroke();
-      fill(0,0,255,50);
-      ellipse(scrnPnt.x, scrnPnt.y, 40, 40);
+      stroke(0,0,0,100); // Line Color
+      strokeWeight(2); // Interaction cirle
+      fill(255,255,255,0);
+      ellipse(scrnPnt.x, scrnPnt.y, 20, 20);
+      //line(lx, ly, ex, ey);
 
       if(mousePressed && enableFocus){
          cam.lookAt(-location.x,location.y,location.z);
       }
     }
-
   }
-
-
+  
 }

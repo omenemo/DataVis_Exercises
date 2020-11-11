@@ -60,7 +60,7 @@ void setup() {
   }
 
   // surftex1 =loadImage("data/earth_sat.jpg"); 
-  surftex1 =loadImage("data/earth_min.jpg"); 
+  surftex1 =loadImage("data/earth_min_01.jpg"); //Map image
 
 
   canvas.sphereDetail(32);
@@ -74,21 +74,21 @@ void setup() {
 
 void draw() {
   human.set(mouseX,mouseY);
-  // Even we draw a full screen image after this, it is recommended to use
+  // Even if we draw a full screen image after this, it is recommended to use
   // background to clear the screen anyways, otherwise A3D will think
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(255);
+  canvas.background(20); //Background color
 
   // Disabling writing to the depth mask so the 
-  // background image doesn't occludes any 3D object.
+  // background image doesn't occlude any 3D object.
   canvas.hint(DISABLE_DEPTH_MASK);
   canvas.hint(ENABLE_DEPTH_MASK);
-  canvas.directionalLight(255, 0,0, -10, -10, -10);
-  canvas.directionalLight(100, 255, 50, 0,0,10);
-  canvas.directionalLight(255, 100, 50, 0,10,0);
-  canvas.directionalLight(180, 180, 255, 10,-10,-10);
+  /*canvas.directionalLight(250, 250, 250, -10, -10, -10);
+  canvas.directionalLight(250, 250, 250, 0,0,10);
+  canvas.directionalLight(250, 250, 250, 0,10,0);
+  canvas.directionalLight(250, 250, 250, 10,-10,-10);*/
   // this rotation is applied to correct the rotation of the texture according to 
   canvas.push();
   canvas.rotateX(radians( rX));
@@ -139,8 +139,6 @@ void draw() {
 }
 
 
-
-
 PointOfInterest [] pOIs;
 void loadData() {
 
@@ -166,7 +164,6 @@ void loadData() {
 
       futCities.add(futureCity);
       futGeoCoords.add(new PVector(longFut, latFut));
-
     }
   }
   pOIs = new PointOfInterest[cities.size()];
@@ -250,31 +247,36 @@ class  PointOfInterest{
     );
   }
   void display3D(PGraphics _canvas){
+    // Big dots settings 
     _canvas.strokeWeight(10);
-    _canvas.stroke(255,0,0);
+    _canvas.stroke(0,0,0); // red
     _canvas.point(-location.x,location.y,location.z);
     
   }
 
   void display2D(){
-    fill(0,0,255);
+    // Typeface settings
+    fill(255,255,255); 
     strokeWeight(0.5);
-    stroke(0,0,255,100);
+    //stroke(255,255,255,100);
     
-
-    stroke(0,0,255);
-    strokeWeight(4);
-    point(scrnPnt.x,scrnPnt.y);
-    
+    // Small dots setting
+    stroke(0,0,255); //  blue
+    strokeWeight(0); // invisible
+    point(scrnPnt.x,scrnPnt.y); 
   }
+  
   void interact(PVector _human){
-    if(_human.dist(scrnPnt)< 10){
-      strokeWeight(0.5);
-      stroke(0,0,255,100);
+    if(_human.dist(scrnPnt)< 7){
+      strokeWeight(2);
+      stroke(0,0,0,100); // Line Color
       float lx = scrnPnt.x;
       float ly = scrnPnt.y;
+      float ex = futurePnt.x;
+      float ex = futurePnt.y;
       line(lx,0,lx,height);
       line(0,ly,width,ly);
+      line(lx,ly,ex,ey);
       textFont(myFont);
       text(name, 25,180);
       text("screen coords : " + scrnPnt.x + " ,  " + scrnPnt.y +  " , " + scrnPnt.z, 25,200);
@@ -283,9 +285,11 @@ class  PointOfInterest{
       text(name, width-300,scrnPnt.y+10);
       textFont(myFont);
       text("lat : " + lat + "lon : " + lon, width-300,scrnPnt.y+50);
-      noStroke();
-      fill(0,0,255,50);
-      ellipse(scrnPnt.x, scrnPnt.y, 40, 40);
+      stroke(0,0,0,100); // Line Color
+      strokeWeight(2); // Interaction cirle
+      fill(255,255,255, 0); 
+      ellipse(scrnPnt.x, scrnPnt.y, 20, 20);
+      
 
       if(mousePressed){
         // cam.lookAt(-location.x,location.y,location.z);
