@@ -6,7 +6,7 @@ class  PointOfInterest{
   String name;
   int i;
   float lat, lon;
-  PointOfInterest(float latitude, float longitude, String _name, float _r, int _i){
+  PointOfInterest(float latitude, float longitude, String _name, float _r, int _i){ // what is this?
 
   // some explanation on Geo Coordinates to an spheric system
   // lat long to > x y for vis in 2D
@@ -28,7 +28,7 @@ class  PointOfInterest{
   // R = R + altitude;
   // x = R* cos (latitude in radians) * cos(longitude in radians);
   // y = R * cos(latitude in radians) * sin(longitude in radians);
-  // z = R * sin(latitude in radians )
+  // z = R * sin(latitude in radians)
   
     lat = latitude;
     lon = longitude;
@@ -37,7 +37,7 @@ class  PointOfInterest{
       radius* cos (radians(latitude)) * cos(radians(longitude)),
       radius * cos(radians(latitude)) * sin(radians(longitude)),
       radius * sin(radians(latitude))
-    );
+      );
     name = _name;
     i = _i;
   }
@@ -87,7 +87,7 @@ class  PointOfInterest{
       text(name, width-300,scrnPnt.y+10);
       textFont(myFont);
       text("lat : " + lat + "lon : " + lon, width-300,scrnPnt.y+50);
-      stroke(0,0,0,100); // Line Color
+      stroke(0,0,0, 100); // Line Color
       strokeWeight(2); // Interaction cirle
       fill(255,255,255,0);
       ellipse(scrnPnt.x, scrnPnt.y, 20, 20);

@@ -61,10 +61,10 @@ void setup() {
 
   //loading texture map for the earth
   // surftex1 =loadImage("data/earth_sat.jpg"); 
-  surftex1 =loadImage("data/earth_min.jpg"); 
+  surftex1 =loadImage("data/earth_min.jpg");
 
   // loading images containing simplified GeoTIFF data
-  co2 = loadImage("data/co2_emissions.png"); 
+  co2 = loadImage("data/co2_emissions.png");
   co2.resize(width/8, height/8);
   
   reforest= loadImage("data/geodata_ref_potential.png");
