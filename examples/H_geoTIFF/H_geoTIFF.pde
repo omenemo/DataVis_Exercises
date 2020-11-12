@@ -1,8 +1,5 @@
-// written by nd3svt for BA Interaction Design zhdk
-// data literacy and visualization inputs
-// october - november 2020, Berlin
-
-//modified and commented by Nemo Brigatti
+// Nemo Brigatti based on template from nd3svt 
+// Excercise for Future Cities
 
 // reference to Spherical Coordinate System
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system
@@ -102,7 +99,7 @@ void draw() {
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(175);// background color
+  canvas.background(0);// background color
 
   // Disabling writing to the depth mask so the 
   // background image doesn't occludes any 3D object.

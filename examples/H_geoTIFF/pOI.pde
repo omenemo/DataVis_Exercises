@@ -144,28 +144,43 @@ class  PointOfInterest {
       println(fuAnMeTemp);
       println(anMeTemp);
 
-
       float ProAnMeTemp = map(Time, 2020, 2050, anMeTemp, fuAnMeTemp);
       float ProMaxTemp = map(Time, 2020, 2050, maxTemp, fuAnMeTemp);
       float ProMinTemp = map(Time, 2020, 2050, minTemp, fuMinTemp);
       float ProAnPre = map(Time, 2020, 2050, anPre, fuAnPre);
-      //float ProWetMoPre = map(Time, 2020, 2050, WetMoPre, fuWetMoPre);
+      float ProWetMoPre = map(Time, 2020, 2050, WetMoPre, fuWetMoPre);
+      
+      strokeWeight(3);  // info window 
+      stroke(255, 255, 255, 255);  
+      fill(0, 0, 0, 255);       
+      rect(width-450, scrnPnt.y - 50, 425, 250, 20, 20, 20, 20); 
+      
+      // INFO TEXT
+      fill(255, 255, 255, 255);   
+      noStroke(); 
+      textFont(myFontH1); // Description Info //font herarchy
+      text(name + " " + Time, width-400, scrnPnt.y+10);
+      textFont(myFontH2);
+      // text("lat : " + lat + "lon : " + lon, width-400, scrnPnt.y+40);
+      text(int(ProAnMeTemp) + "° mean Temperature / year", width-400, scrnPnt.y+40);
+      text(int(ProMaxTemp) + "° max Temperature", width-400, scrnPnt.y+70);
+      text(int(ProMinTemp) + "° min Temperature", width-400, scrnPnt.y+100);
+      text(int(ProAnPre) + " mm Preciptation / year", width-400, scrnPnt.y+130);
+      text(int(ProWetMoPre) + " mm  Preciptation / Wettest Month", width-400, scrnPnt.y+160);
 
-      strokeWeight(6);      // style attributes
-      stroke(255, 255, 255);    // lines -> white
-      line(lx, ly, width - 330, scrnPnt.y); // Cur_Info_connecting line
-      ellipse(width - 325, scrnPnt.y, 10, 10); // info_circle
-
+      strokeWeight(6);      // Cur_Info_connecing line // info_circle
+      strokeWeight(3); 
+      line(lx, ly, width - 450, scrnPnt.y); //white shadow
+      ellipse(width - 450, scrnPnt.y, 20, 20); 
+      stroke(0, 0, 0, 255);  
+      line(lx, ly, width - 450, scrnPnt.y); //black line
+       
       strokeWeight(3);      // style attributes
       stroke(0, 0, 0, 255);    // lines -> black
       fill(0, 0, 0, 0);        // typo -> White
 
-      // line(lx,0,lx,height);  // debugging position lines
-      // line(0,ly,width,ly);   // debugging position lines
-
       line(lx, ly, ex, ey);    // Cur_Fut_connecting line
-      line(lx, ly, width - 330, scrnPnt.y); // Cur_Info_connecting line
-      ellipse(width - 325, scrnPnt.y, 10, 10); // info_circle
+      
       ellipse(scrnPnt.x, scrnPnt.y, 20, 20); // current_circle
       ellipse(scrnPntFut.x, scrnPntFut.y, 20, 20); // future_circle
 
@@ -178,18 +193,6 @@ class  PointOfInterest {
       text(name, 25, 180); // Debugging Info
       text("screen coords : " + scrnPnt.x + " ,  " + scrnPnt.y +  " , " + scrnPnt.z, 25, 200); // screen coordinate display
       text("3D coords : "  + -location.x + " ,  " + location.y +  " , " + location.z, 25, 220); // 3d coordinate display
-
-      textFont(myFontH1); // Description Info //font herarchy
-      text(name, width-300, scrnPnt.y+10);
-      text(Time, width-150, scrnPnt.y+10);
-      textFont(myFont);
-      text("lat : " + lat + "lon : " + lon, width-300, scrnPnt.y+50);
-      text(int(ProAnMeTemp) + "c  mean Temperature / year", width-300, scrnPnt.y+70);
-      text(int(ProMaxTemp) + "c  max Temperature", width-300, scrnPnt.y+110);
-      text(int(ProMinTemp) + "c  min Temperature", width-300, scrnPnt.y+150);
-      text(int(ProAnPre) + " mm Preciptation / year", width-300, scrnPnt.y+190);
-      //text(int(ProWetMoPre) + " mm  Preciptation / Wettest Month"  , width-300, scrnPnt.y+230);
-
 
       if (mousePressed && enableFocus) {
         cam.lookAt(-location.x, location.y, location.z);
