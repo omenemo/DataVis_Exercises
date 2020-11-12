@@ -1,14 +1,12 @@
-// written by nd3svt for BA Interaction Design zhdk
-// data literacy and visualization inputs
-// october - november 2020, Berlin
-
-//modified and commented by Nemo Brigatti
+// Template by nd3svt, modified by Nemo Brigatti, BA IaD, 2020
 
 // reference to Spherical Coordinate System
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system
 // how to calculate x y z in an spherical coordinate system
 
 import peasy.*; // peasy cam library
+import controlP5.*;
+import processing.opengl.*;
 
 PShape earth;
 PImage surftex1;
@@ -19,19 +17,24 @@ PFont myFont, myFontH2, myFontH1; // font class definition
 PGraphics3D g3;
 PeasyCam cam;
 PMatrix3D currCameraMatrix;
+ControlP5 cp5;
 
 // images containing GeoTIFF Data Sets
 PImage co2;
 PImage reforest;
 
 float r = 400;
-boolean easycamIntialized =false;
+boolean easycamIntialized = false;
 
 int rX = -90;
 int rY = 0;
 int rZ = 0;
 PGraphics canvas;
 // examples of manually added points
+
+int sliderTicks2 = 2020;
+Slider abc;
+int myColor = color(255,0,0);
 
 PVector human  = new PVector(); // mouse position vector 
 
@@ -50,12 +53,12 @@ ArrayList<String> fuMinTemp = new ArrayList<String>();
 ArrayList<String> anPre = new ArrayList<String>();
 ArrayList<String> fuAnPre = new ArrayList<String>();
 ArrayList<String> WetMoPre = new ArrayList<String>();
-ArrayList<String> fuWetMoPre = new ArrayList<String>();
+ArrayList<String> fuMoPre = new ArrayList<String>();
 
 float angle = 0;
 
 void setup() {
-  size(displayWidth, displayHeight, P2D);
+  size(displayWidth, displayHeight, P3D);
   canvas = createGraphics(width, height, P3D);
   cam = new PeasyCam(this, 800);
   cam.setWheelScale(0.05);
@@ -66,8 +69,8 @@ void setup() {
   frameRate(60);
 
   if (!easycamIntialized) {
-    cam.setMinimumDistance(20);
-    cam.setMaximumDistance(r*600);
+    cam.setMinimumDistance(r*0.8);
+    cam.setMaximumDistance(r*4);
     easycamIntialized=true;
   }
 
@@ -91,10 +94,14 @@ void setup() {
   // turning Data from Image (grayscale) into an ArrayList containing CO2 data in 3D Geo Coordinates
   dataFromTIFFtoArray(co2, pntsFTIFF_co2, 1.0, color(0,0,0));
   dataFromTIFFtoArray(reforest, pntsFTIFF_reforest, 0.25, color(0,255,0));
+  
+  // GUI
+  cp5 = new ControlP5(this);
+  
 }
 
-
 void draw() {
+  
   angle =0.0005;
   human.set(mouseX, mouseY);
   // Even we draw a full screen image after this, it is recommended to use
@@ -102,7 +109,7 @@ void draw() {
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(175);// background color
+  canvas.background(0);// background color
 
   // Disabling writing to the depth mask so the 
   // background image doesn't occludes any 3D object.
@@ -114,7 +121,7 @@ void draw() {
   canvas.directionalLight(180, 180, 255, 10, -10, -10);*/
   // this rotation is applied to correct the rotation of the texture according to 
   canvas.push();
-  canvas.rotateX(radians( rX));
+  canvas.rotateX(radians(rX));
   canvas.rotateY(radians(rY));
   canvas.rotateZ(radians(rZ));
   canvas.shape(earth);
@@ -155,6 +162,7 @@ void draw() {
   // text(" rz :  " + rZ,100,145);
   cam.endHUD();
   // 
+  
   if(enableRotation){
   cam.rotateX(angle);
   cam.rotateY(angle*1.25);
@@ -173,8 +181,27 @@ void draw() {
     debugInfo();
   }
   
-  println (Time);
+  //GUI with ControlP5
+  GUI ();
+  
 }
+
+void GUI () {
+  hint(DISABLE_DEPTH_TEST);
+  cam.beginHUD();
+    cp5.addSlider("sliderTicks2")
+     .setPosition(25,250)
+     .setFont(myFont)
+     .setHeight(16)
+     .setWidth(200)
+     .setRange(2020,2050) // values can range from big to small as well
+     .setValue(2020)
+     .setNumberOfTickMarks(7)
+     .setSliderMode(Slider.FLEXIBLE);
+  cam.endHUD();
+  hint(ENABLE_DEPTH_TEST);
+}
+
 
 PointOfInterest [] pOIs;
 void loadData() {
@@ -199,13 +226,10 @@ void loadData() {
     String anMeTem  =  row.getString("Annual_Mean_Temperature");
     String fuAnMeTem  =  row.getString("future_Annual_Mean_Temperature");
     String maxTem   =  row.getString("Max_Temperature_of_Warmest_Month");
-    String fuMaxTem   =  row.getString("future_Max_Temperature_of_Warmest_Month");
     String minTem   =  row.getString("Min_Temperature_of_Coldest_Month");
-    String fuMinTem   =  row.getString("future_Min_Temperature_of_Coldest_Month");
     String anPr     =  row.getString("Annual_Precipitation");
     String fuAnPr     =  row.getString("future_Annual_Precipitation");
     String WetMoPr  =  row.getString("Precipitation_of_Wettest_Month");
-    String fuWetMoPr  =  row.getString("future_Precipitation_of_Wettest_Month");
 
     if (city.length()>0) { // Feed the strings just created to the array
       // println(city, longitude, latitude );
@@ -217,17 +241,15 @@ void loadData() {
       anMeTemp.add(anMeTem);
       fuAnMeTemp.add(fuAnMeTem);
       maxTemp.add(maxTem);
-      fuMaxTemp.add(fuMaxTem);
       minTemp.add(minTem);
-      fuMinTemp.add(fuMinTem);
       anPre.add(anPr);
       fuAnPre.add(fuAnPr);
       WetMoPre.add(WetMoPr);
-      fuWetMoPre.add(fuWetMoPr);
     }
   }
   pOIs = new PointOfInterest[cities.size()];
   multiplePOI();
+  
 }
 
 void multiplePOI() {
@@ -242,15 +264,12 @@ void multiplePOI() {
     futGeoCoords.get(i).x, 
     futCities.get(i),
     anMeTemp.get(i), 
-    fuAnMeTemp.get(i), 
+    fuAnMeTemp.get(i),
     maxTemp.get(i),
-    fuMaxTemp.get(i),
     minTemp.get(i),
-    fuMinTemp.get(i),
     anPre.get(i),
     fuAnPre.get(i),
     WetMoPre.get(i),
-    fuWetMoPre.get(i),
     400,
     i);
   }
@@ -278,8 +297,7 @@ void debugInfo() {
   text("> press 'G' for showing reforestation potential", 20,60);
   text("> press 'R' for stop rotation", 20,80);
   text("> press 'D' for hide/show debugging information", 20, 100);
-  text("> press 'arrow Up /Down' for Timeline", 20, 120);
-  text("> press 'F' for dis/en/abling focussing on click at specific location", 20, 140);
-  text("> double mouse click for focussing back to the center of the sphere", 20,160);
+  text("> press 'F' for dis/en/abling focussing on click at specific location", 20, 120);
+  text("> double mouse click for focussing back to the center of the sphere", 20,140);
   
 }

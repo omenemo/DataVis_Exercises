@@ -13,13 +13,10 @@ class  PointOfInterest{
   String anMeTemp; 
   String fuAnMeTemp; 
   String maxTemp;
-  String fuMaxTemp; 
   String minTemp;
-  String fuMinTemp; 
   String anPre;
   String fuAnPre;
   String WetMoPre;
-  String fuWeMoPre; 
   Float radius;
   int i;
   
@@ -33,16 +30,13 @@ class  PointOfInterest{
     String _anMeTemp,
     String _fuAnMeTemp, 
     String _maxTemp, 
-    String _fuMaxTemp,
     String _minTemp, 
-    String _fuMinTemp,
     String _anPre,
     String _fuAnPre,
     String _WetMoPre, 
-    String _fuWetMoPre,
     float _r, 
     int _i){
-     
+    
 
   // some explanation on Geo Coordinates to an spheric system
   // lat long to > x y for vis in 2D
@@ -87,16 +81,14 @@ class  PointOfInterest{
       radius * sin(radians(latFut))
       );
     nameFut = _nameFut;
+    
     anMeTemp = _anMeTemp;
-    //fuAnMeTemp = _fuAnMeTemp;
     maxTemp = _maxTemp;
-    //fuMaxTemp = _fuMaxTemp;
     minTemp = _minTemp;
-    //fuMinTemp = _fuMinTemp;
     anPre = _anPre;
-    //fuAnPre = _fuAnPre;
+    fuAnPre = _fuAnPre;
     WetMoPre = _WetMoPre;
-    //fuWetMoPre = _fuWetMoPre;
+    
     i = _i;
   }
 
@@ -140,13 +132,6 @@ class  PointOfInterest{
       float ex = scrnPntFut.x; // future city 2d drawing coordinates
       float ey = scrnPntFut.y;
       
-      // Year / Time specific Projection value calculation using start- & endyear / current & future data
-      float ProAnMeTemp = map(Time, 2020, 2050, float(anMeTemp), float(fuAnMeTemp));
-      float ProMaxTemp = map(Time, 2020, 2050, float(maxTemp), float(fuAnMeTemp));
-      float ProMinTemp = map(Time, 2020, 2050, float(minTemp), float(fuMinTemp));
-      float ProAnPre = map(Time, 2020, 2050, float(anPre), float(fuAnPre));
-      float ProWetMoPre = map(Time, 2020, 2050, float(WetMoPre), float(fuWetMoPre));
-      
       strokeWeight(6);      // style attributes
       stroke(255, 255,255);    // lines -> white
       line(lx, ly, width - 330, scrnPnt.y); // Cur_Info_connecting line
@@ -177,15 +162,13 @@ class  PointOfInterest{
       
       textFont(myFontH1); // Description Info //font herarchy
       text(name, width-300, scrnPnt.y+10);
-      text(Time, width-150, scrnPnt.y+10);
       textFont(myFont);
       text("lat : " + lat + "lon : " + lon, width-300, scrnPnt.y+50);
-      text(int(ProAnMeTemp) + "c  mean Temperature / year", width-300, scrnPnt.y+70);
-      text(int(ProMaxTemp) + "c  max Temperature"  , width-300, scrnPnt.y+110);
-      text(int(ProMinTemp) + "c  min Temperature"  , width-300, scrnPnt.y+150);
-      text(int(ProMnPre) + " mm Preciptation / year"  , width-300, scrnPnt.y+190);
-      text(int(ProWetMoPre) + " mm  Preciptation / Wettest Month"  , width-300, scrnPnt.y+230);
-      
+      text(int(anMeTemp) + "c  mean Temperature / year"  , width-300, scrnPnt.y+70);
+      text(int(maxTemp) + "c  max Temperature"  , width-300, scrnPnt.y+90);
+      text(int(minTemp) + "c  min Temperature"  , width-300, scrnPnt.y+110);
+      text(int(anPre) + " mm Precipation / year"  , width-300, scrnPnt.y+130);
+      text(int(WetMoPre) + " mm  Precipation / Wettest Month"  , width-300, scrnPnt.y+150);
 
       if(mousePressed && enableFocus){
          cam.lookAt(-location.x,location.y,location.z);
