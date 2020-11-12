@@ -80,9 +80,9 @@ class  PointOfInterest{
     
     anMeTemp = _anMeTemp;
     maxTemp = _maxTemp;
-    minTemp = _maxTemp;
-    anPre = _maxTemp;
-    WetMoPre = _maxTemp;
+    minTemp = _minTemp;
+    anPre = _anPre;
+    WetMoPre = _WetMoPre;
     
     i = _i;
   }
