@@ -1,12 +1,38 @@
 class  PointOfInterest{
 
-  PVector location; // PVector for current cities
-  float radius;
+  PVector location; // PVector for current cities  
+
   PVector scrnPnt = new PVector(); // pvector for displaying all cities based on PVector «location» 
+  PVector scrnPntFut = new PVector();
+  
+  Float lat, lon;
+  Float latFut,lonFut;
   String name;
+  String nameFut;
+  PVector locationFut;
+  String anMeTemp; 
+  String maxTemp;
+  String minTemp;
+  String anPre;
+  String WetMoPre;
+  Float radius;
   int i;
-  float lat, lon;
-  PointOfInterest(float latitude, float longitude, String _name, float _r, int _i){ // what is this?
+  
+  PointOfInterest(   // function Parameters, see multiple POI function, 13 parameters
+    float _latitude, 
+    float _longitude, 
+    String _name, 
+    float _latFut, 
+    float _lonFut,
+    String _nameFut, 
+    String _anMeTemp, 
+    String _maxTemp, 
+    String _minTemp, 
+    String _anPre, 
+    String _WetMoPre, 
+    float _r, 
+    int _i){
+    
 
   // some explanation on Geo Coordinates to an spheric system
   // lat long to > x y for vis in 2D
@@ -30,20 +56,45 @@ class  PointOfInterest{
   // y = R * cos(latitude in radians) * sin(longitude in radians);
   // z = R * sin(latitude in radians)
   
-    lat = latitude;
-    lon = longitude;
+    lat = _latitude;
+    lon = _longitude;
     radius = _r +0.5; // with 10 units away from earth's surface
-    location = new PVector( // defining the 3d coordinate PVector using Latitude + Longitude from location array
-      radius* cos (radians(latitude)) * cos(radians(longitude)),
-      radius * cos(radians(latitude)) * sin(radians(longitude)),
-      radius * sin(radians(latitude))
+    // defining the 3d coordinate PVector using Latitude + Longitude from currentLocation array
+    location = new PVector( 
+      radius* cos (radians(_latitude)) * cos(radians(_longitude)),
+      radius * cos(radians(_latitude)) * sin(radians(_longitude)),
+      radius * sin(radians(_latitude))
       );
+      
     name = _name;
+    
+    latFut = _latFut;
+    lonFut = _lonFut;
+    // defining the 3d coordinate PVector using Latitude + Longitude from futureLocation array
+    locationFut = new PVector( 
+      radius* cos (radians(latFut)) * cos(radians(lonFut)),
+      radius * cos(radians(latFut)) * sin(radians(lonFut)),
+      radius * sin(radians(latFut))
+      );
+    nameFut = _nameFut;
+    
+    anMeTemp = _anMeTemp;
+    maxTemp = _maxTemp;
+    minTemp = _maxTemp;
+    anPre = _maxTemp;
+    WetMoPre = _maxTemp;
+    
     i = _i;
   }
 
-  void update(PGraphics _canvas){ // function to translate the «3d» coordinates to «Screen» coordinates
-    scrnPnt.set(
+  void update(PGraphics _canvas){ 
+     scrnPntFut.set(  // translate the current «3d» coordinates to «Screen» coordinates
+     _canvas.screenX(-locationFut.x,locationFut.y,locationFut.z),
+      _canvas.screenY(-locationFut.x,locationFut.y,locationFut.z),
+      _canvas.screenZ(-locationFut.x,locationFut.y,locationFut.z)
+     );
+    
+    scrnPnt.set( // translate the «3d» Future coordinates to «Screen» coordinates
       _canvas.screenX(-location.x,location.y,location.z),
       _canvas.screenY(-location.x,location.y,location.z),
       _canvas.screenZ(-location.x,location.y,location.z)
@@ -60,8 +111,6 @@ class  PointOfInterest{
   void display2D(){
     // Typeface settings
     fill(255,255,255);
-    strokeWeight(0.5);
-    //stroke(255,255,255,100); //Outlining type WTF? #typeretards!!!
     
     // Small dots parameters
     stroke(0,0,255); //  blue
@@ -70,28 +119,43 @@ class  PointOfInterest{
   }
   
   void interact(PVector _human){
-    if(_human.dist(scrnPnt)< 7){ // collision detection with cities
-      strokeWeight(0.5);
-      stroke(0,0,0,100); // Line Color
-      float lx = scrnPnt.x;
+    // collision detection radius / more than three is critical because of proximity error
+    if(_human.dist(scrnPnt)< 3){ 
+    
+      float lx = scrnPnt.x;    // current city 2d drawing coordinates
       float ly = scrnPnt.y;
-      // float ex = scrnPnt.x;
-      // float ey = scrnPnt.y;
-      line(lx,0,lx,height);
-      line(0,ly,width,ly);
-      textFont(myFont);
-      text(name, 25,180);
+      float ex = scrnPntFut.x; // future city 2d drawing coordinates
+      float ey = scrnPntFut.y;
+      
+      strokeWeight(3);      // style attributes
+      stroke(0,0,0,255);    // lines -> black
+      fill(0,0,0,0);        // typo -> White
+      
+      // line(lx,0,lx,height);  // debugging position lines
+      // line(0,ly,width,ly);   // debugging position lines
+      
+      line(lx, ly, ex, ey);    // Cur_Fut_connecting line
+      line(lx, ly, width - 330, scrnPnt.y+10); // Cur_Info_connecting line
+      ellipse(width - 325, scrnPnt.y+10, 10, 10); // info_circle
+      ellipse(scrnPnt.x, scrnPnt.y, 20, 20); // current_circle
+      ellipse(scrnPntFut.x, scrnPntFut.y, 20, 20); // future_circle
+      
+      fill(255,255,255);  // typo -> White
+      
+      textFont(myFont); // font herarchy
+      text(name, 25,180); // Debugging Info
       text("screen coords : " + scrnPnt.x + " ,  " + scrnPnt.y +  " , " + scrnPnt.z, 25,200); // screen coordinate display
       text("3D coords : "  + -location.x + " ,  " + location.y +  " , " + location.z, 25,220); // 3d coordinate display
-      textFont(myFontH);
-      text(name, width-300,scrnPnt.y+10);
+      
+      textFont(myFontH1); // Description Info //font herarchy
+      text(name, width-300, scrnPnt.y+20);
       textFont(myFont);
-      text("lat : " + lat + "lon : " + lon, width-300,scrnPnt.y+50);
-      stroke(0,0,0, 100); // Line Color
-      strokeWeight(2); // Interaction cirle
-      fill(255,255,255,0);
-      ellipse(scrnPnt.x, scrnPnt.y, 20, 20);
-      //line(lx, ly, ex, ey);
+      text("lat : " + lat + "lon : " + lon, width-300, scrnPnt.y+50);
+      text(anMeTemp + " c  anMeTemp"  , width-300, scrnPnt.y+70);
+      text(maxTemp + " c  maxTemp"  , width-300, scrnPnt.y+90);
+      text(minTemp + " c  minTemp"  , width-300, scrnPnt.y+110);
+      text(anPre + " mm  anPre"  , width-300, scrnPnt.y+130);
+      text(WetMoPre + " mm  WetMoPre"  , width-300, scrnPnt.y+150);
 
       if(mousePressed && enableFocus){
          cam.lookAt(-location.x,location.y,location.z);

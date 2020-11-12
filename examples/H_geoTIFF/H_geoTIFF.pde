@@ -2,6 +2,8 @@
 // data literacy and visualization inputs
 // october - november 2020, Berlin
 
+//modified and commented by Nemo Brigatti
+
 // reference to Spherical Coordinate System
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system
 // how to calculate x y z in an spherical coordinate system
@@ -12,7 +14,7 @@ PShape earth;
 PImage surftex1;
 PImage surftex2;
 
-PFont myFont, myFontH;
+PFont myFont, myFontH2, myFontH1; // font class definition
 
 PGraphics3D g3;
 PeasyCam cam;
@@ -25,9 +27,9 @@ PImage reforest;
 float r = 400;
 boolean easycamIntialized =false;
 
-int rX=-90;
-int rY=0;
-int rZ=0;
+int rX = -90;
+int rY = 0;
+int rZ = 0;
 PGraphics canvas;
 // examples of manually added points
 
@@ -39,17 +41,22 @@ ArrayList<String> cities  = new ArrayList<String>(); // names of the cities
 ArrayList<PVector> geoCoords = new ArrayList<PVector>();
 ArrayList<String> futCities = new ArrayList<String>(); // names of the future cities
 ArrayList<PVector> futGeoCoords = new ArrayList<PVector>();
+ArrayList<String> anMeTemp = new ArrayList<String>();
+ArrayList<String> maxTemp = new ArrayList<String>();
+ArrayList<String> minTemp = new ArrayList<String>();
+ArrayList<String> anPre = new ArrayList<String>();
+ArrayList<String> WetMoPre = new ArrayList<String>();
 
-float angle=0;
-
+float angle = 0;
 
 void setup() {
   size(displayWidth, displayHeight, P2D);
   canvas = createGraphics(width, height, P3D);
   cam = new PeasyCam(this, 800);
   cam.setWheelScale(0.05);
-  myFont = createFont("Helvetica", 12);
-  myFontH = createFont("Helvetica", 64);
+  myFont =  createFont("Helvetica", 15);
+  myFontH2 = createFont("Helvetica", 20);
+  myFontH1 = createFont("Helvetica", 30);
 
   frameRate(60);
 
@@ -61,7 +68,7 @@ void setup() {
 
   //loading texture map for the earth
   // surftex1 =loadImage("data/earth_sat.jpg"); 
-  surftex1 =loadImage("data/earth_min.jpg");
+  surftex1 =loadImage("data/earth_min_02.jpg");
 
   // loading images containing simplified GeoTIFF data
   co2 = loadImage("data/co2_emissions.png");
@@ -90,7 +97,7 @@ void draw() {
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(0);// background color
+  canvas.background(175);// background color
 
   // Disabling writing to the depth mask so the 
   // background image doesn't occludes any 3D object.
@@ -169,25 +176,37 @@ void loadData() {
   println(futureCities.getRowCount() + " total rows in table");
 
   int entriesCount =0;
-  for (TableRow row : futureCities.rows()) {
+  for (TableRow row : futureCities.rows()) { // writing into Futurecities table
     
-    // current city Position definition 
+    // create string based on table / current city
     String city = row.getString("current_city");
     float longitude = row.getFloat("Longitude");
     float latitude = row.getFloat("Latitude");
 
-    // future city Position definition 
-    //but how are these connected to the current cities?
+    // create string based on table / future city
     String futureCity = row.getString("future_city_1_source");
     float longFut = row.getFloat("future_long");
     float latFut = row.getFloat("future_lat");
+    
+    // create string based on table / data
+    String anMeTem  =  row.getString("Annual_Mean_Temperature");
+    String maxTem   =  row.getString("Max_Temperature_of_Warmest_Month");
+    String minTem   =  row.getString("Min_Temperature_of_Coldest_Month");
+    String anPr     =  row.getString("Annual_Precipitation");
+    String WetMoPr  =  row.getString("Precipitation_of_Wettest_Month");
 
-    if (city.length()>0) {
+    if (city.length()>0) { // Feed the strings just created to the array
       // println(city, longitude, latitude );
       cities.add(city);
       geoCoords.add(new PVector(longitude, latitude));
       futCities.add(futureCity);
       futGeoCoords.add(new PVector(longFut, latFut));
+      
+      anMeTemp.add(anMeTem);
+      maxTemp.add(maxTem);
+      minTemp.add(minTem);
+      anPre.add(anPr);
+      WetMoPre.add(WetMoPr);
     }
   }
   pOIs = new PointOfInterest[cities.size()];
@@ -196,7 +215,22 @@ void loadData() {
 
 void multiplePOI() {
   for (int i=0; i<cities.size(); i++) {
-    pOIs[i] = new PointOfInterest(geoCoords.get(i).y, geoCoords.get(i).x, cities.get(i), 400, i);
+    
+    pOIs[i] = new PointOfInterest(
+    
+    geoCoords.get(i).y, 
+    geoCoords.get(i).x, 
+    cities.get(i), 
+    futGeoCoords.get(i).y, 
+    futGeoCoords.get(i).x, 
+    futCities.get(i),
+    anMeTemp.get(i), 
+    maxTemp.get(i),
+    minTemp.get(i),
+    anPre.get(i),
+    WetMoPre.get(i),
+    400,
+    i);
   }
 }
 
