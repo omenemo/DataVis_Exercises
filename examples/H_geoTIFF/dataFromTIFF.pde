@@ -7,15 +7,15 @@ void dataFromTIFFtoArray(PImage _img, ArrayList<PntFTIFF> _pntsFTIFF, float _sca
   for (int i=0; i <  (_img.width*_img.height) - step; i +=step) {
 
     color c = _img.pixels[i];
-    
-   
+
+
     float x = i % _img.width;
     float y = (i-x)/_img.width;
     //println(x,y);
-    x = map(x,0, _img.width,-180,180);
-    y = map(y,0, _img.height,90,-90);
-    
-   //println(brightness + " , " + i + " , x:" + x + ",  y:" + y);
+    x = map(x, 0, _img.width, -180, 180);
+    y = map(y, 0, _img.height, 90, -90);
+
+    //println(brightness + " , " + i + " , x:" + x + ",  y:" + y);
     _pntsFTIFF.add(new PntFTIFF(x, y, c, _scale, _tc));
     //println("data added " + i );
   }
@@ -29,7 +29,7 @@ class PntFTIFF {
   float radius;
   float scale;
   color c;
-  PntFTIFF(float _lon, float _lat, color _value, float _scale, color _c){
+  PntFTIFF(float _lon, float _lat, color _value, float _scale, color _c) {
     scale = _scale;
     c = _c;
     lon = _lon;
@@ -38,25 +38,25 @@ class PntFTIFF {
     value = _value;
     radius = 400 + 5 ;
     loc3D = new PVector(
-      radius* cos (radians(lat)) * cos(radians(lon)),
-      radius * cos(radians(lat)) * sin(radians(lon)),
+      radius* cos (radians(lat)) * cos(radians(lon)), 
+      radius * cos(radians(lat)) * sin(radians(lon)), 
       radius * sin(radians(lat))
-    );
+      );
   }
-  
-  void display(PGraphics _canvas){
+
+  void display(PGraphics _canvas) {
     //_canvas.strokeWeight(brightness(value));
     //_canvas.push();
     //_canvas.fill(value,100);
-    _canvas.strokeWeight(map(brightness(value),0,255,1.2,8)* map(brightness(value),0,255,1.2,8) * scale);
+    _canvas.strokeWeight(map(brightness(value), 0, 255, 1.2, 8)* map(brightness(value), 0, 255, 1.2, 8) * scale);
     //_canvas.translate(-loc3D.x,loc3D.y,loc3D.z);
     //_canvas.sphere(brightness(value));
     _canvas.stroke(
-    map(brightness(value),0,255,100,0) * red(c), 
-    map(brightness(value),0,255,100,0) * green(c), 
-    map(brightness(value),0,255,100,0) * blue(c),
-    150);
-    _canvas.point(-loc3D.x,loc3D.y,loc3D.z);
+      map(brightness(value), 0, 255, 100, 0) * red(c), 
+      map(brightness(value), 0, 255, 100, 0) * green(c), 
+      map(brightness(value), 0, 255, 100, 0) * blue(c), 
+      150);
+    _canvas.point(-loc3D.x, loc3D.y, loc3D.z);
     //_canvas.pop();
   }
 } 

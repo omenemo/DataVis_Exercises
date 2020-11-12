@@ -78,7 +78,7 @@ void setup() {
   // loading images containing simplified GeoTIFF data
   co2 = loadImage("data/co2_emissions.png");
   co2.resize(width/8, height/8);
-  
+
   reforest= loadImage("data/geodata_ref_potential.png");
   reforest.resize(width/8, height/8);
 
@@ -92,7 +92,6 @@ void setup() {
   //dataFromTIFFtoArray(co2, pntsFTIFF_co2, 1.0, color(0,0,0));
   //dataFromTIFFtoArray(reforest, pntsFTIFF_reforest, 0.25, color(0,255,0));
 }
-
 
 void draw() {
   updateTime();
@@ -109,10 +108,6 @@ void draw() {
   // background image doesn't occludes any 3D object.
   canvas.hint(DISABLE_DEPTH_MASK);
   canvas.hint(ENABLE_DEPTH_MASK);
-  /*canvas.directionalLight(255, 0, 0, -10, -10, -10);
-  canvas.directionalLight(100, 255, 50, 0, 0, 10);
-  canvas.directionalLight(255, 100, 50, 0, 10, 0);
-  canvas.directionalLight(180, 180, 255, 10, -10, -10);*/
   // this rotation is applied to correct the rotation of the texture according to 
   canvas.push();
   canvas.rotateX(radians( rX));
@@ -123,7 +118,7 @@ void draw() {
 
   // displaying Points of Interest (cities inside future cities data set)
   displayMultiplePOI3D();
-  
+
   // displaying co2
   if (showCO2) {
     if (pntsFTIFF_co2.size()>0) {
@@ -134,7 +129,7 @@ void draw() {
       canvas.pop();
     }
   }
-  
+
   //displaying reforest
   if (showReforest) {
     if (pntsFTIFF_reforest.size()>0) {
@@ -156,12 +151,12 @@ void draw() {
   // text(" rz :  " + rZ,100,145);
   cam.endHUD();
   // 
-  if(enableRotation){
-  cam.rotateX(angle);
-  cam.rotateY(angle*1.25);
-  cam.rotateZ(angle* (-1.25));
+  if (enableRotation) {
+    cam.rotateX(angle);
+    cam.rotateY(angle*1.25);
+    cam.rotateZ(angle* (-1.25));
   }
-  
+
   canvas.endDraw();
   cam.getState().apply(canvas);
   image(canvas, 0, 0);
@@ -170,36 +165,36 @@ void draw() {
   // if(frameCount%120 == 0) println(frameRate);
 
   displayMultiplePOI2D();
-  if(showDebug){
+  if (showDebug) {
     debugInfo();
   }
-  
+
   //println (Time);
 }
 
 PointOfInterest [] pOIs;
 void loadData() {
-  
+
   futureCities = loadTable("data/future_cities_data.csv", "header");
   println(futureCities.getRowCount() + " total rows in table");
 
   for (TableRow row : futureCities.rows()) { // writing into Futurecities table
     // println(city, longitude, latitude );
-      cities.add(row.getString("current_city"));
-      geoCoords.add(new PVector(row.getFloat("Longitude"), row.getFloat("Latitude")));
-      futCities.add(row.getString("future_city_1_source"));
-      futGeoCoords.add(new PVector(row.getFloat("future_long"), row.getFloat("future_lat")));
-      
-      anMeTemps.add(row.getFloat("Annual_Mean_Temperature"));
-      fuAnMeTemps.add(row.getFloat("future_Annual_Mean_Temperature"));
-      maxTemps.add(row.getFloat("Max_Temperature_of_Warmest_Month"));
-      fuMaxTemps.add(row.getFloat("future_Max_Temperature_of_Warmest_Month"));
-      minTemps.add(row.getFloat("Min_Temperature_of_Coldest_Month"));
-      fuMinTemps.add(row.getFloat("future_Min_Temperature_of_Coldest_Month"));
-      anPres.add(row.getFloat("Annual_Precipitation"));
-      fuAnPres.add(row.getFloat("future_Annual_Precipitation"));
-      WetMoPres.add(row.getFloat("Precipitation_of_Wettest_Month"));
-      fuWetMoPres.add(row.getFloat("future_Precipitation_of_Wettest_Month"));
+    cities.add(row.getString("current_city"));
+    geoCoords.add(new PVector(row.getFloat("Longitude"), row.getFloat("Latitude")));
+    futCities.add(row.getString("future_city_1_source"));
+    futGeoCoords.add(new PVector(row.getFloat("future_long"), row.getFloat("future_lat")));
+
+    anMeTemps.add(row.getFloat("Annual_Mean_Temperature"));
+    fuAnMeTemps.add(row.getFloat("future_Annual_Mean_Temperature"));
+    maxTemps.add(row.getFloat("Max_Temperature_of_Warmest_Month"));
+    fuMaxTemps.add(row.getFloat("future_Max_Temperature_of_Warmest_Month"));
+    minTemps.add(row.getFloat("Min_Temperature_of_Coldest_Month"));
+    fuMinTemps.add(row.getFloat("future_Min_Temperature_of_Coldest_Month"));
+    anPres.add(row.getFloat("Annual_Precipitation"));
+    fuAnPres.add(row.getFloat("future_Annual_Precipitation"));
+    WetMoPres.add(row.getFloat("Precipitation_of_Wettest_Month"));
+    fuWetMoPres.add(row.getFloat("future_Precipitation_of_Wettest_Month"));
   }
   pOIs = new PointOfInterest[cities.size()];
   multiplePOI();
@@ -207,27 +202,27 @@ void loadData() {
 
 void multiplePOI() {
   for (int i=0; i<cities.size(); i++) {
-    
+
     pOIs[i] = new PointOfInterest(
-    
-    geoCoords.get(i).y, 
-    geoCoords.get(i).x, 
-    cities.get(i), 
-    futGeoCoords.get(i).y, 
-    futGeoCoords.get(i).x, 
-    futCities.get(i),
-    anMeTemps.get(i), 
-    fuAnMeTemps.get(i), 
-    maxTemps.get(i),
-    fuMaxTemps.get(i),
-    minTemps.get(i),
-    fuMinTemps.get(i),
-    anPres.get(i),
-    fuAnPres.get(i),
-    WetMoPres.get(i),
-    fuWetMoPres.get(i),
-    400,
-    i);
+
+      geoCoords.get(i).y, 
+      geoCoords.get(i).x, 
+      cities.get(i), 
+      futGeoCoords.get(i).y, 
+      futGeoCoords.get(i).x, 
+      futCities.get(i), 
+      anMeTemps.get(i), 
+      fuAnMeTemps.get(i), 
+      maxTemps.get(i), 
+      fuMaxTemps.get(i), 
+      minTemps.get(i), 
+      fuMinTemps.get(i), 
+      anPres.get(i), 
+      fuAnPres.get(i), 
+      WetMoPres.get(i), 
+      fuWetMoPres.get(i), 
+      400, 
+      i);
   }
 }
 
@@ -249,12 +244,11 @@ void debugInfo() {
   textFont(myFont);
   fill(255);
   text("fps : " + frameRate, 20, 20);
-  text("> press 'C' for showing CO2 emissions", 20,40);
-  text("> press 'G' for showing reforestation potential", 20,60);
-  text("> press 'R' for stop rotation", 20,80);
+  text("> press 'C' for showing CO2 emissions", 20, 40);
+  text("> press 'G' for showing reforestation potential", 20, 60);
+  text("> press 'R' for stop rotation", 20, 80);
   text("> press 'D' for hide/show debugging information", 20, 100);
   text("> press 'arrow Up /Down' for Timeline", 20, 120);
   text("> press 'F' for dis/en/abling focussing on click at specific location", 20, 140);
-  text("> double mouse click for focussing back to the center of the sphere", 20,160);
-  
+  text("> double mouse click for focussing back to the center of the sphere", 20, 160);
 }

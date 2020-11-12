@@ -47,7 +47,7 @@ void updateTime() {
     if (isDOWNpressed && Time >= 2021) {
       Time--;
     }
-    
+
     pressedAt = millis();
   }
 }
