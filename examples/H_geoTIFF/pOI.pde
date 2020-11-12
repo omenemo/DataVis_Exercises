@@ -11,9 +11,11 @@ class  PointOfInterest{
   String nameFut;
   PVector locationFut;
   String anMeTemp; 
+  String fuAnMeTemp; 
   String maxTemp;
   String minTemp;
   String anPre;
+  String fuAnPre;
   String WetMoPre;
   Float radius;
   int i;
@@ -25,10 +27,12 @@ class  PointOfInterest{
     float _latFut, 
     float _lonFut,
     String _nameFut, 
-    String _anMeTemp, 
+    String _anMeTemp,
+    String _fuAnMeTemp, 
     String _maxTemp, 
     String _minTemp, 
-    String _anPre, 
+    String _anPre,
+    String _fuAnPre,
     String _WetMoPre, 
     float _r, 
     int _i){
@@ -82,6 +86,7 @@ class  PointOfInterest{
     maxTemp = _maxTemp;
     minTemp = _minTemp;
     anPre = _anPre;
+    fuAnPre = _fuAnPre;
     WetMoPre = _WetMoPre;
     
     i = _i;
@@ -127,6 +132,11 @@ class  PointOfInterest{
       float ex = scrnPntFut.x; // future city 2d drawing coordinates
       float ey = scrnPntFut.y;
       
+      strokeWeight(6);      // style attributes
+      stroke(255, 255,255);    // lines -> white
+      line(lx, ly, width - 330, scrnPnt.y); // Cur_Info_connecting line
+      ellipse(width - 325, scrnPnt.y, 10, 10); // info_circle
+      
       strokeWeight(3);      // style attributes
       stroke(0,0,0,255);    // lines -> black
       fill(0,0,0,0);        // typo -> White
@@ -135,10 +145,13 @@ class  PointOfInterest{
       // line(0,ly,width,ly);   // debugging position lines
       
       line(lx, ly, ex, ey);    // Cur_Fut_connecting line
-      line(lx, ly, width - 330, scrnPnt.y+10); // Cur_Info_connecting line
-      ellipse(width - 325, scrnPnt.y+10, 10, 10); // info_circle
+      line(lx, ly, width - 330, scrnPnt.y); // Cur_Info_connecting line
+      ellipse(width - 325, scrnPnt.y, 10, 10); // info_circle
       ellipse(scrnPnt.x, scrnPnt.y, 20, 20); // current_circle
       ellipse(scrnPntFut.x, scrnPntFut.y, 20, 20); // future_circle
+      
+      fill (255,0,0);
+      point(scrnPnt.x,scrnPnt.y, scrnPnt.z);
       
       fill(255,255,255);  // typo -> White
       
@@ -148,14 +161,14 @@ class  PointOfInterest{
       text("3D coords : "  + -location.x + " ,  " + location.y +  " , " + location.z, 25,220); // 3d coordinate display
       
       textFont(myFontH1); // Description Info //font herarchy
-      text(name, width-300, scrnPnt.y+20);
+      text(name, width-300, scrnPnt.y+10);
       textFont(myFont);
       text("lat : " + lat + "lon : " + lon, width-300, scrnPnt.y+50);
-      text(anMeTemp + " c  anMeTemp"  , width-300, scrnPnt.y+70);
-      text(maxTemp + " c  maxTemp"  , width-300, scrnPnt.y+90);
-      text(minTemp + " c  minTemp"  , width-300, scrnPnt.y+110);
-      text(anPre + " mm  anPre"  , width-300, scrnPnt.y+130);
-      text(WetMoPre + " mm  WetMoPre"  , width-300, scrnPnt.y+150);
+      text(int(anMeTemp) + "c  mean Temperature / year"  , width-300, scrnPnt.y+70);
+      text(int(maxTemp) + "c  max Temperature"  , width-300, scrnPnt.y+90);
+      text(int(minTemp) + "c  min Temperature"  , width-300, scrnPnt.y+110);
+      text(int(anPre) + " mm Precipation / year"  , width-300, scrnPnt.y+130);
+      text(int(WetMoPre) + " mm  Precipation / Wettest Month"  , width-300, scrnPnt.y+150);
 
       if(mousePressed && enableFocus){
          cam.lookAt(-location.x,location.y,location.z);

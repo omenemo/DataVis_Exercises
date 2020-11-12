@@ -1,14 +1,12 @@
-// written by nd3svt for BA Interaction Design zhdk
-// data literacy and visualization inputs
-// october - november 2020, Berlin
-
-//modified and commented by Nemo Brigatti
+// Template by nd3svt, modified by Nemo Brigatti, BA IaD, 2020
 
 // reference to Spherical Coordinate System
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system
 // how to calculate x y z in an spherical coordinate system
 
 import peasy.*; // peasy cam library
+import controlP5.*;
+import processing.opengl.*;
 
 PShape earth;
 PImage surftex1;
@@ -19,19 +17,24 @@ PFont myFont, myFontH2, myFontH1; // font class definition
 PGraphics3D g3;
 PeasyCam cam;
 PMatrix3D currCameraMatrix;
+ControlP5 controlP5;
 
 // images containing GeoTIFF Data Sets
 PImage co2;
 PImage reforest;
 
 float r = 400;
-boolean easycamIntialized =false;
+boolean easycamIntialized = false;
 
 int rX = -90;
 int rY = 0;
 int rZ = 0;
 PGraphics canvas;
 // examples of manually added points
+
+int buttonValue = 1;
+int myColor = color(255,0,0);
+Slider Time;
 
 PVector human  = new PVector(); // mouse position vector 
 
@@ -42,15 +45,21 @@ ArrayList<PVector> geoCoords = new ArrayList<PVector>();
 ArrayList<String> futCities = new ArrayList<String>(); // names of the future cities
 ArrayList<PVector> futGeoCoords = new ArrayList<PVector>();
 ArrayList<String> anMeTemp = new ArrayList<String>();
+ArrayList<String> fuAnMeTemp = new ArrayList<String>();
 ArrayList<String> maxTemp = new ArrayList<String>();
+ArrayList<String> fuMaxTemp = new ArrayList<String>();
 ArrayList<String> minTemp = new ArrayList<String>();
+ArrayList<String> fuMinTemp = new ArrayList<String>();
 ArrayList<String> anPre = new ArrayList<String>();
+ArrayList<String> fuAnPre = new ArrayList<String>();
 ArrayList<String> WetMoPre = new ArrayList<String>();
+ArrayList<String> fuMoPre = new ArrayList<String>();
 
 float angle = 0;
 
+
 void setup() {
-  size(displayWidth, displayHeight, P2D);
+  size(displayWidth, displayHeight, OPENGL);
   canvas = createGraphics(width, height, P3D);
   cam = new PeasyCam(this, 800);
   cam.setWheelScale(0.05);
@@ -61,8 +70,8 @@ void setup() {
   frameRate(60);
 
   if (!easycamIntialized) {
-    cam.setMinimumDistance(20);
-    cam.setMaximumDistance(r*600);
+    cam.setMinimumDistance(r*0.8);
+    cam.setMaximumDistance(r*4);
     easycamIntialized=true;
   }
 
@@ -86,10 +95,11 @@ void setup() {
   // turning Data from Image (grayscale) into an ArrayList containing CO2 data in 3D Geo Coordinates
   dataFromTIFFtoArray(co2, pntsFTIFF_co2, 1.0, color(0,0,0));
   dataFromTIFFtoArray(reforest, pntsFTIFF_reforest, 0.25, color(0,255,0));
+  
 }
 
-
 void draw() {
+  
   angle =0.0005;
   human.set(mouseX, mouseY);
   // Even we draw a full screen image after this, it is recommended to use
@@ -97,7 +107,7 @@ void draw() {
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(175);// background color
+  canvas.background(0);// background color
 
   // Disabling writing to the depth mask so the 
   // background image doesn't occludes any 3D object.
@@ -167,7 +177,9 @@ void draw() {
   if(showDebug){
     debugInfo();
   }
+  
 }
+
 
 PointOfInterest [] pOIs;
 void loadData() {
@@ -190,9 +202,11 @@ void loadData() {
     
     // create string based on table / data
     String anMeTem  =  row.getString("Annual_Mean_Temperature");
+    String fuAnMeTem  =  row.getString("future_Annual_Mean_Temperature");
     String maxTem   =  row.getString("Max_Temperature_of_Warmest_Month");
     String minTem   =  row.getString("Min_Temperature_of_Coldest_Month");
     String anPr     =  row.getString("Annual_Precipitation");
+    String fuAnPr     =  row.getString("future_Annual_Precipitation");
     String WetMoPr  =  row.getString("Precipitation_of_Wettest_Month");
 
     if (city.length()>0) { // Feed the strings just created to the array
@@ -203,9 +217,11 @@ void loadData() {
       futGeoCoords.add(new PVector(longFut, latFut));
       
       anMeTemp.add(anMeTem);
+      fuAnMeTemp.add(fuAnMeTem);
       maxTemp.add(maxTem);
       minTemp.add(minTem);
       anPre.add(anPr);
+      fuAnPre.add(fuAnPr);
       WetMoPre.add(WetMoPr);
     }
   }
@@ -225,9 +241,11 @@ void multiplePOI() {
     futGeoCoords.get(i).x, 
     futCities.get(i),
     anMeTemp.get(i), 
+    fuAnMeTemp.get(i),
     maxTemp.get(i),
     minTemp.get(i),
     anPre.get(i),
+    fuAnPre.get(i),
     WetMoPre.get(i),
     400,
     i);
