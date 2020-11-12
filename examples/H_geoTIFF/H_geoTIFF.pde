@@ -41,16 +41,16 @@ ArrayList<String> cities  = new ArrayList<String>(); // names of the cities
 ArrayList<PVector> geoCoords = new ArrayList<PVector>();
 ArrayList<String> futCities = new ArrayList<String>(); // names of the future cities
 ArrayList<PVector> futGeoCoords = new ArrayList<PVector>();
-ArrayList<Float> anMeTemp = new ArrayList<Float>();
-ArrayList<Float> fuAnMeTemp = new ArrayList<Float>();
-ArrayList<Float> maxTemp = new ArrayList<Float>();
-ArrayList<Float> fuMaxTemp = new ArrayList<Float>();
-ArrayList<Float> minTemp = new ArrayList<Float>();
-ArrayList<Float> fuMinTemp = new ArrayList<Float>();
-ArrayList<Float> anPre = new ArrayList<Float>();
-ArrayList<Float> fuAnPre = new ArrayList<Float>();
-ArrayList<Float> WetMoPre = new ArrayList<Float>();
-ArrayList<Float> fuWetMoPre = new ArrayList<Float>();
+ArrayList<Float> anMeTemps = new ArrayList<Float>();
+ArrayList<Float> fuAnMeTemps = new ArrayList<Float>();
+ArrayList<Float> maxTemps = new ArrayList<Float>();
+ArrayList<Float> fuMaxTemps = new ArrayList<Float>();
+ArrayList<Float> minTemps = new ArrayList<Float>();
+ArrayList<Float> fuMinTemps = new ArrayList<Float>();
+ArrayList<Float> anPres = new ArrayList<Float>();
+ArrayList<Float> fuAnPres = new ArrayList<Float>();
+ArrayList<Float> WetMoPres = new ArrayList<Float>();
+ArrayList<Float> fuWetMoPres = new ArrayList<Float>();
 
 float angle = 0;
 
@@ -89,12 +89,13 @@ void setup() {
 
   loadData();
   // turning Data from Image (grayscale) into an ArrayList containing CO2 data in 3D Geo Coordinates
-  dataFromTIFFtoArray(co2, pntsFTIFF_co2, 1.0, color(0,0,0));
-  dataFromTIFFtoArray(reforest, pntsFTIFF_reforest, 0.25, color(0,255,0));
+  //dataFromTIFFtoArray(co2, pntsFTIFF_co2, 1.0, color(0,0,0));
+  //dataFromTIFFtoArray(reforest, pntsFTIFF_reforest, 0.25, color(0,255,0));
 }
 
 
 void draw() {
+  updateTime();
   angle =0.0005;
   human.set(mouseX, mouseY);
   // Even we draw a full screen image after this, it is recommended to use
@@ -173,7 +174,7 @@ void draw() {
     debugInfo();
   }
   
-  println (Time);
+  //println (Time);
 }
 
 PointOfInterest [] pOIs;
@@ -182,49 +183,23 @@ void loadData() {
   futureCities = loadTable("data/future_cities_data.csv", "header");
   println(futureCities.getRowCount() + " total rows in table");
 
-  int entriesCount =0;
   for (TableRow row : futureCities.rows()) { // writing into Futurecities table
-    
-    // create string based on table / current city
-    String city = row.getString("current_city");
-    float longitude = row.getFloat("Longitude");
-    float latitude = row.getFloat("Latitude");
-
-    // create string based on table / future city
-    String futureCity = row.getString("future_city_1_source");
-    float longFut = row.getFloat("future_long");
-    float latFut = row.getFloat("future_lat");
-    
-    // create string based on table / data
-    Float anMeTem  =  row.getFloat("Annual_Mean_Temperature");
-    Float fuAnMeTem  =  row.getFloat("future_Annual_Mean_Temperature");
-    Float maxTem   =  row.getFloat("Max_Temperature_of_Warmest_Month");
-    Float fuMaxTem   =  row.getFloat("future_Max_Temperature_of_Warmest_Month");
-    Float minTem   =  row.getFloat("Min_Temperature_of_Coldest_Month");
-    Float fuMinTem   =  row.getFloat("future_Min_Temperature_of_Coldest_Month");
-    Float anPr     =  row.getFloat("Annual_Precipitation");
-    Float fuAnPr     =  row.getFloat("future_Annual_Precipitation");
-    Float WetMoPr  =  row.getFloat("Precipitation_of_Wettest_Month");
-    Float fuWetMoPr  =  row.getFloat("future_Precipitation_of_Wettest_Month");
-
-    if (city.length()>0) { // Feed the Floats just created to the array
-      // println(city, longitude, latitude );
-      cities.add(city);
-      geoCoords.add(new PVector(longitude, latitude));
-      futCities.add(futureCity);
-      futGeoCoords.add(new PVector(longFut, latFut));
+    // println(city, longitude, latitude );
+      cities.add(row.getString("current_city"));
+      geoCoords.add(new PVector(row.getFloat("Longitude"), row.getFloat("Latitude")));
+      futCities.add(row.getString("future_city_1_source"));
+      futGeoCoords.add(new PVector(row.getFloat("future_long"), row.getFloat("future_lat")));
       
-      anMeTemp.add(anMeTem);
-      fuAnMeTemp.add(fuAnMeTem);
-      maxTemp.add(maxTem);
-      fuMaxTemp.add(fuMaxTem);
-      minTemp.add(minTem);
-      fuMinTemp.add(fuMinTem);
-      anPre.add(anPr);
-      fuAnPre.add(fuAnPr);
-      WetMoPre.add(WetMoPr);
-      fuWetMoPre.add(fuWetMoPr);
-    }
+      anMeTemps.add(row.getFloat("Annual_Mean_Temperature"));
+      fuAnMeTemps.add(row.getFloat("future_Annual_Mean_Temperature"));
+      maxTemps.add(row.getFloat("Max_Temperature_of_Warmest_Month"));
+      fuMaxTemps.add(row.getFloat("future_Max_Temperature_of_Warmest_Month"));
+      minTemps.add(row.getFloat("Min_Temperature_of_Coldest_Month"));
+      fuMinTemps.add(row.getFloat("future_Min_Temperature_of_Coldest_Month"));
+      anPres.add(row.getFloat("Annual_Precipitation"));
+      fuAnPres.add(row.getFloat("future_Annual_Precipitation"));
+      WetMoPres.add(row.getFloat("Precipitation_of_Wettest_Month"));
+      fuWetMoPres.add(row.getFloat("future_Precipitation_of_Wettest_Month"));
   }
   pOIs = new PointOfInterest[cities.size()];
   multiplePOI();
@@ -241,16 +216,16 @@ void multiplePOI() {
     futGeoCoords.get(i).y, 
     futGeoCoords.get(i).x, 
     futCities.get(i),
-    anMeTemp.get(i), 
-    fuAnMeTemp.get(i), 
-    maxTemp.get(i),
-    fuMaxTemp.get(i),
-    minTemp.get(i),
-    fuMinTemp.get(i),
-    anPre.get(i),
-    fuAnPre.get(i),
-    WetMoPre.get(i),
-    fuWetMoPre.get(i),
+    anMeTemps.get(i), 
+    fuAnMeTemps.get(i), 
+    maxTemps.get(i),
+    fuMaxTemps.get(i),
+    minTemps.get(i),
+    fuMinTemps.get(i),
+    anPres.get(i),
+    fuAnPres.get(i),
+    WetMoPres.get(i),
+    fuWetMoPres.get(i),
     400,
     i);
   }

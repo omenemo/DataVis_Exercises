@@ -19,7 +19,7 @@ class  PointOfInterest{
   Float anPre;
   Float fuAnPre;
   Float WetMoPre;
-  Float fuWeMoPre; 
+  Float fuWetMoPre; 
   Float radius;
   int i;
   
@@ -88,15 +88,15 @@ class  PointOfInterest{
       );
     nameFut = _nameFut;
     anMeTemp = _anMeTemp;
-    //fuAnMeTemp = _fuAnMeTemp;
+    fuAnMeTemp = _fuAnMeTemp;
     maxTemp = _maxTemp;
-    //fuMaxTemp = _fuMaxTemp;
+    fuMaxTemp = _fuMaxTemp;
     minTemp = _minTemp;
-    //fuMinTemp = _fuMinTemp;
+    fuMinTemp = _fuMinTemp;
     anPre = _anPre;
-    //fuAnPre = _fuAnPre;
+    fuAnPre = _fuAnPre;
     WetMoPre = _WetMoPre;
-    //fuWetMoPre = _fuWetMoPre;
+    fuWetMoPre = _fuWetMoPre;
     i = _i;
   }
 
@@ -141,6 +141,10 @@ class  PointOfInterest{
       float ey = scrnPntFut.y;
       
       // Year / Time specific Projection value calculation using start- & endyear / current & future data
+      println(fuAnMeTemp);
+      println(anMeTemp);
+      
+      
       float ProAnMeTemp = map(Time, 2020, 2050, anMeTemp, fuAnMeTemp);
       float ProMaxTemp = map(Time, 2020, 2050, maxTemp, fuAnMeTemp);
       float ProMinTemp = map(Time, 2020, 2050, minTemp, fuMinTemp);
