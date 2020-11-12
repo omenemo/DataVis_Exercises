@@ -41,16 +41,16 @@ ArrayList<String> cities  = new ArrayList<String>(); // names of the cities
 ArrayList<PVector> geoCoords = new ArrayList<PVector>();
 ArrayList<String> futCities = new ArrayList<String>(); // names of the future cities
 ArrayList<PVector> futGeoCoords = new ArrayList<PVector>();
-ArrayList<String> anMeTemp = new ArrayList<String>();
-ArrayList<String> fuAnMeTemp = new ArrayList<String>();
-ArrayList<String> maxTemp = new ArrayList<String>();
-ArrayList<String> fuMaxTemp = new ArrayList<String>();
-ArrayList<String> minTemp = new ArrayList<String>();
-ArrayList<String> fuMinTemp = new ArrayList<String>();
-ArrayList<String> anPre = new ArrayList<String>();
-ArrayList<String> fuAnPre = new ArrayList<String>();
-ArrayList<String> WetMoPre = new ArrayList<String>();
-ArrayList<String> fuWetMoPre = new ArrayList<String>();
+ArrayList<Float> anMeTemp = new ArrayList<Float>();
+ArrayList<Float> fuAnMeTemp = new ArrayList<Float>();
+ArrayList<Float> maxTemp = new ArrayList<Float>();
+ArrayList<Float> fuMaxTemp = new ArrayList<Float>();
+ArrayList<Float> minTemp = new ArrayList<Float>();
+ArrayList<Float> fuMinTemp = new ArrayList<Float>();
+ArrayList<Float> anPre = new ArrayList<Float>();
+ArrayList<Float> fuAnPre = new ArrayList<Float>();
+ArrayList<Float> WetMoPre = new ArrayList<Float>();
+ArrayList<Float> fuWetMoPre = new ArrayList<Float>();
 
 float angle = 0;
 
@@ -196,18 +196,18 @@ void loadData() {
     float latFut = row.getFloat("future_lat");
     
     // create string based on table / data
-    String anMeTem  =  row.getString("Annual_Mean_Temperature");
-    String fuAnMeTem  =  row.getString("future_Annual_Mean_Temperature");
-    String maxTem   =  row.getString("Max_Temperature_of_Warmest_Month");
-    String fuMaxTem   =  row.getString("future_Max_Temperature_of_Warmest_Month");
-    String minTem   =  row.getString("Min_Temperature_of_Coldest_Month");
-    String fuMinTem   =  row.getString("future_Min_Temperature_of_Coldest_Month");
-    String anPr     =  row.getString("Annual_Precipitation");
-    String fuAnPr     =  row.getString("future_Annual_Precipitation");
-    String WetMoPr  =  row.getString("Precipitation_of_Wettest_Month");
-    String fuWetMoPr  =  row.getString("future_Precipitation_of_Wettest_Month");
+    Float anMeTem  =  row.getFloat("Annual_Mean_Temperature");
+    Float fuAnMeTem  =  row.getFloat("future_Annual_Mean_Temperature");
+    Float maxTem   =  row.getFloat("Max_Temperature_of_Warmest_Month");
+    Float fuMaxTem   =  row.getFloat("future_Max_Temperature_of_Warmest_Month");
+    Float minTem   =  row.getFloat("Min_Temperature_of_Coldest_Month");
+    Float fuMinTem   =  row.getFloat("future_Min_Temperature_of_Coldest_Month");
+    Float anPr     =  row.getFloat("Annual_Precipitation");
+    Float fuAnPr     =  row.getFloat("future_Annual_Precipitation");
+    Float WetMoPr  =  row.getFloat("Precipitation_of_Wettest_Month");
+    Float fuWetMoPr  =  row.getFloat("future_Precipitation_of_Wettest_Month");
 
-    if (city.length()>0) { // Feed the strings just created to the array
+    if (city.length()>0) { // Feed the Floats just created to the array
       // println(city, longitude, latitude );
       cities.add(city);
       geoCoords.add(new PVector(longitude, latitude));

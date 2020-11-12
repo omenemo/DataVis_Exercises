@@ -10,16 +10,16 @@ class  PointOfInterest{
   String name;
   String nameFut;
   PVector locationFut;
-  String anMeTemp; 
-  String fuAnMeTemp; 
-  String maxTemp;
-  String fuMaxTemp; 
-  String minTemp;
-  String fuMinTemp; 
-  String anPre;
-  String fuAnPre;
-  String WetMoPre;
-  String fuWeMoPre; 
+  Float anMeTemp; 
+  Float fuAnMeTemp; 
+  Float maxTemp;
+  Float fuMaxTemp; 
+  Float minTemp;
+  Float fuMinTemp; 
+  Float anPre;
+  Float fuAnPre;
+  Float WetMoPre;
+  Float fuWeMoPre; 
   Float radius;
   int i;
   
@@ -30,16 +30,16 @@ class  PointOfInterest{
     float _latFut, 
     float _lonFut,
     String _nameFut, 
-    String _anMeTemp,
-    String _fuAnMeTemp, 
-    String _maxTemp, 
-    String _fuMaxTemp,
-    String _minTemp, 
-    String _fuMinTemp,
-    String _anPre,
-    String _fuAnPre,
-    String _WetMoPre, 
-    String _fuWetMoPre,
+    Float _anMeTemp,
+    Float _fuAnMeTemp, 
+    Float _maxTemp, 
+    Float _fuMaxTemp,
+    Float _minTemp, 
+    Float _fuMinTemp,
+    Float _anPre,
+    Float _fuAnPre,
+    Float _WetMoPre, 
+    Float _fuWetMoPre,
     float _r, 
     int _i){
      
@@ -141,11 +141,11 @@ class  PointOfInterest{
       float ey = scrnPntFut.y;
       
       // Year / Time specific Projection value calculation using start- & endyear / current & future data
-      float ProAnMeTemp = map(Time, 2020, 2050, float(anMeTemp), float(fuAnMeTemp));
-      float ProMaxTemp = map(Time, 2020, 2050, float(maxTemp), float(fuAnMeTemp));
-      float ProMinTemp = map(Time, 2020, 2050, float(minTemp), float(fuMinTemp));
-      float ProAnPre = map(Time, 2020, 2050, float(anPre), float(fuAnPre));
-      float ProWetMoPre = map(Time, 2020, 2050, float(WetMoPre), float(fuWetMoPre));
+      float ProAnMeTemp = map(Time, 2020, 2050, anMeTemp, fuAnMeTemp);
+      float ProMaxTemp = map(Time, 2020, 2050, maxTemp, fuAnMeTemp);
+      float ProMinTemp = map(Time, 2020, 2050, minTemp, fuMinTemp);
+      float ProAnPre = map(Time, 2020, 2050, anPre, fuAnPre);
+      //float ProWetMoPre = map(Time, 2020, 2050, WetMoPre, fuWetMoPre);
       
       strokeWeight(6);      // style attributes
       stroke(255, 255,255);    // lines -> white
@@ -183,8 +183,8 @@ class  PointOfInterest{
       text(int(ProAnMeTemp) + "c  mean Temperature / year", width-300, scrnPnt.y+70);
       text(int(ProMaxTemp) + "c  max Temperature"  , width-300, scrnPnt.y+110);
       text(int(ProMinTemp) + "c  min Temperature"  , width-300, scrnPnt.y+150);
-      text(int(ProMnPre) + " mm Preciptation / year"  , width-300, scrnPnt.y+190);
-      text(int(ProWetMoPre) + " mm  Preciptation / Wettest Month"  , width-300, scrnPnt.y+230);
+      text(int(ProAnPre) + " mm Preciptation / year"  , width-300, scrnPnt.y+190);
+      //text(int(ProWetMoPre) + " mm  Preciptation / Wettest Month"  , width-300, scrnPnt.y+230);
       
 
       if(mousePressed && enableFocus){

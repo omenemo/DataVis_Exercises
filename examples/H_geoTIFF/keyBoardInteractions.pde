@@ -4,6 +4,8 @@ boolean showReforest;
 boolean enableRotation;
 boolean enableFocus;
 int Time = 2020;
+boolean futureVect = false;
+boolean pastVect = false;
 
 void keyPressed(){
   if(key == 'c' || key == 'C'){
@@ -26,9 +28,22 @@ void keyPressed(){
     enableFocus = !enableFocus;
   }
     if(keyCode == UP && Time >= 2020 && Time <= 2049){
+      //futureVect = true;
     Time ++;
     }
    if(keyCode == DOWN && Time <= 2050 && Time >= 2021){ 
+      //pastVect = true;
     Time --;
    }
 }
+
+//void keyReleased(){
+//  if(keyCode == UP && Time >= 2020 && Time <= 2049){
+//      futureVect = false;
+//    // Time ++;
+//    }
+//   if(keyCode == DOWN && Time <= 2050 && Time >= 2021){ 
+//      pastVect = false;
+//    // Time --;
+//   }
+//}
