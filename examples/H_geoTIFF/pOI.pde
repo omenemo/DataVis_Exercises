@@ -68,7 +68,7 @@ class  PointOfInterest {
 
     lat = _latitude;
     lon = _longitude;
-    radius = _r +0.5; // with 10 units away from earth's surface
+    radius = _r + 5; // with 10 units away from earth's surface
     // defining the 3d coordinate PVector using Latitude + Longitude from currentLocation array
     location = new PVector( 
       radius* cos (radians(_latitude)) * cos(radians(_longitude)), 
@@ -114,25 +114,41 @@ class  PointOfInterest {
       );
   }
 
-  void display3D(PGraphics _canvas) {
-    // Big dots settings 
+  void display3D(PGraphics _canvas) { // 3d color dots settings 
+
+    colorMode(HSB);
+
+    float precIncSize;
+    float colRange = map(Time, 2020, 2050, 0, fuAnMeTemp - anMeTemp);
+    int colMap = int(map(colRange, 0, 3, 0, 300));
+    
+    colorMode(HSB, 360, 100, 100);
+    
+    _canvas.strokeWeight(40);
+    _canvas.stroke(colMap, 100, 100, 100); // black
+    _canvas.fill(0, 0, 0); // black
+    _canvas.point(-location.x, location.y, location.z);
     _canvas.strokeWeight(10);
     _canvas.stroke(0, 0, 0); // black
     _canvas.point(-location.x, location.y, location.z);
   }
 
   void display2D() {
-    // Typeface settings
-    fill(255, 255, 255);
-
     // Small dots parameters
-    stroke(0, 0, 255); //  blue
+    stroke(0, 0, 0); //  Visualisation color
     strokeWeight(0); // invisible
     point(scrnPnt.x, scrnPnt.y);
   }
 
+  float ProAnMeTemp;
+  float ProMaxTemp;
+  float ProMinTemp;
+  float ProAnPre;
+  float ProWetMoPre;
+
   void interact(PVector _human) {
     // collision detection radius / more than three is critical because of proximity error
+     
     if (_human.dist(scrnPnt)< 3) { 
 
       float lx = scrnPnt.x;    // current city 2d drawing coordinates
@@ -140,23 +156,23 @@ class  PointOfInterest {
       float ex = scrnPntFut.x; // future city 2d drawing coordinates
       float ey = scrnPntFut.y;
 
+      ProAnMeTemp = map(Time, 2020, 2050, anMeTemp, fuAnMeTemp);
+      ProMaxTemp = map(Time, 2020, 2050, maxTemp, fuAnMeTemp);
+      ProMinTemp = map(Time, 2020, 2050, minTemp, fuMinTemp);
+      ProAnPre = map(Time, 2020, 2050, anPre, fuAnPre);
+      ProWetMoPre = map(Time, 2020, 2050, WetMoPre, fuWetMoPre);
+
       // Year / Time specific Projection value calculation using start- & endyear / current & future data
       println(fuAnMeTemp);
       println(anMeTemp);
 
-      float ProAnMeTemp = map(Time, 2020, 2050, anMeTemp, fuAnMeTemp);
-      float ProMaxTemp = map(Time, 2020, 2050, maxTemp, fuAnMeTemp);
-      float ProMinTemp = map(Time, 2020, 2050, minTemp, fuMinTemp);
-      float ProAnPre = map(Time, 2020, 2050, anPre, fuAnPre);
-      float ProWetMoPre = map(Time, 2020, 2050, WetMoPre, fuWetMoPre);
-      
       strokeWeight(3);  // info window 
-      stroke(255, 255, 255, 255);  
-      fill(0, 0, 0, 255);       
+      stroke(0, 0, 100);  
+      fill(0, 0, 0);       
       rect(width-450, scrnPnt.y - 50, 425, 250, 20, 20, 20, 20); 
-      
+
       // INFO TEXT
-      fill(255, 255, 255, 255);   
+      fill(0, 0, 100);
       noStroke(); 
       textFont(myFontH1); // Description Info //font herarchy
       text(name + " " + Time, width-400, scrnPnt.y+10);
@@ -168,26 +184,27 @@ class  PointOfInterest {
       text(int(ProAnPre) + " mm Preciptation / year", width-400, scrnPnt.y+130);
       text(int(ProWetMoPre) + " mm  Preciptation / Wettest Month", width-400, scrnPnt.y+160);
 
-      strokeWeight(6);      // Cur_Info_connecing line // info_circle
-      strokeWeight(3); 
+      strokeWeight(6);      // Current City Info connecing line // info_circle
+      stroke(0, 0, 100); 
       line(lx, ly, width - 450, scrnPnt.y); //white shadow
-      ellipse(width - 450, scrnPnt.y, 20, 20); 
-      stroke(0, 0, 0, 255);  
+      strokeWeight(3); 
+      stroke(0, 0, 0);
       line(lx, ly, width - 450, scrnPnt.y); //black line
-       
+      ellipse(width - 450, scrnPnt.y, 20, 20);
+
       strokeWeight(3);      // style attributes
       stroke(0, 0, 0, 255);    // lines -> black
       fill(0, 0, 0, 0);        // typo -> White
 
       line(lx, ly, ex, ey);    // Cur_Fut_connecting line
-      
+
       ellipse(scrnPnt.x, scrnPnt.y, 20, 20); // current_circle
       ellipse(scrnPntFut.x, scrnPntFut.y, 20, 20); // future_circle
 
-      fill (255, 0, 0);
+      fill (0, 0, 100);
       point(scrnPnt.x, scrnPnt.y, scrnPnt.z);
 
-      fill(255, 255, 255);  // typo -> White
+      fill(0, 0, 100);  // typo -> White
 
       textFont(myFont); // font herarchy
       text(name, 25, 180); // Debugging Info

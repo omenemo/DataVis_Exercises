@@ -50,16 +50,19 @@ ArrayList<Float> WetMoPres = new ArrayList<Float>();
 ArrayList<Float> fuWetMoPres = new ArrayList<Float>();
 
 float angle = 0;
+    
+
 
 void setup() {
+  
   size(displayWidth, displayHeight, P2D);
+  colorMode(HSB, 360, 100, 100, 100);
   canvas = createGraphics(width, height, P3D);
   cam = new PeasyCam(this, 800);
   cam.setWheelScale(0.05);
   myFont =  createFont("Helvetica", 15);
   myFontH2 = createFont("Helvetica", 20);
   myFontH1 = createFont("Helvetica", 30);
-
   frameRate(60);
 
   if (!easycamIntialized) {
@@ -91,6 +94,7 @@ void setup() {
 }
 
 void draw() {
+   colorMode(HSB, 360, 100, 100);
   updateTime();
   angle =0.0005;
   human.set(mouseX, mouseY);
@@ -99,7 +103,8 @@ void draw() {
   // you want to keep each drawn frame in the framebuffer, which results in 
   // slower rendering.
   canvas.beginDraw();
-  canvas.background(0);// background color
+  canvas.background( 0, 0, 0);// background color / white
+
 
   // Disabling writing to the depth mask so the 
   // background image doesn't occludes any 3D object.
@@ -239,7 +244,7 @@ void displayMultiplePOI3D() { // showing 3d points of interest
 
 void debugInfo() {
   textFont(myFont);
-  fill(255);
+  fill(0, 0, 100); // White
   text("fps : " + frameRate, 20, 20);
   text("> press 'C' for showing CO2 emissions", 20, 40);
   text("> press 'G' for showing reforestation potential", 20, 60);
