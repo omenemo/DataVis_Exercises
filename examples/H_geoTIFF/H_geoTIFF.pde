@@ -64,6 +64,7 @@ void setup() {
   myFontH2 = createFont("Helvetica", 20);
   myFontH1 = createFont("Helvetica", 30);
   frameRate(60);
+  colorMode(HSB);
 
   if (!easycamIntialized) {
     cam.setMinimumDistance(20);

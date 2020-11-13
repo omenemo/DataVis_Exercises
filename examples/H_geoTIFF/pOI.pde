@@ -120,12 +120,12 @@ class  PointOfInterest {
 
     float precIncSize;
     float colRange = map(Time, 2020, 2050, 0, fuAnMeTemp - anMeTemp);
-    int colMap = int(map(colRange, 0, 3, 0, 300));
+    int colMap = int(map(colRange, 0, 3, 100, 300));
     
-    colorMode(HSB, 360, 100, 100);
+    
     
     _canvas.strokeWeight(40);
-    _canvas.stroke(colMap, 100, 100, 100); // black
+    _canvas.stroke(colMap, 220, 100, 255); // point color
     _canvas.fill(0, 0, 0); // black
     _canvas.point(-location.x, location.y, location.z);
     _canvas.strokeWeight(10);
