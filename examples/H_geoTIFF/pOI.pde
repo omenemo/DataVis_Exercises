@@ -116,16 +116,18 @@ class  PointOfInterest {
 
   void display3D(PGraphics _canvas) { // 3d color dots settings 
 
-    colorMode(HSB);
-
-    float precIncSize;
+    colorMode(HSB, 360, 100, 100);
+    
+    float precInit = map(anPre, 0, 1500, 30, 40);
+    float precIncSize = map(Time, 2020, 2050, 0, fuAnPre - anPre);
+    float precMod = map(precIncSize, -100, 150, -15, 10);
+    println(precMod);
+    float tempInit = map(anMeTemp, 0, 35 , 0, 200);
     float colRange = map(Time, 2020, 2050, 0, fuAnMeTemp - anMeTemp);
-    int colMap = int(map(colRange, 0, 3, 100, 300));
+    int RcolMap = int(map(colRange, 0, 3, 0, 255));
     
-    
-    
-    _canvas.strokeWeight(40);
-    _canvas.stroke(colMap, 220, 100, 255); // point color
+    _canvas.strokeWeight(precInit + precMod); //point size
+    _canvas.stroke(tempInit + RcolMap, 100, 100, 200); // point color
     _canvas.fill(0, 0, 0); // black
     _canvas.point(-location.x, location.y, location.z);
     _canvas.strokeWeight(10);
